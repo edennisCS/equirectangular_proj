@@ -1,4 +1,5 @@
 from PIL import Image
+import math
 
 # Function to convert Cartesian coordinates to equirectangular
 def cartesian_to_equirectangular(x, y, z):
