@@ -1,5 +1,8 @@
 from PIL import Image
 import math
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.transforms import Affine2D
 
 # Function to convert Cartesian coordinates to equirectangular
 def cartesian_to_equirectangular(x, y, z):
@@ -18,7 +21,7 @@ width, height = new_size
 pixel_coordinates = []
 
 # Loop through the pixels
-for y in range(height):
-    for x in range(width):
-        # Print coordinates
-        print(f"Coordinates: ({x}, {y})")
+# for y in range(height):
+#     for x in range(width):
+#         # Print coordinates
+#         print(f"Coordinates: ({x}, {y})")
