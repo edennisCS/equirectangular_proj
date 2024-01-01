@@ -11,6 +11,7 @@ def cartesian_to_equirectangular(x, y, z):
     return lon, lat
 
 image = Image.open("path/to/image.jpg")
+# this is the size of the overall image
 new_size = (2000, 1000)
 resized_image = image.resize(new_size)
 

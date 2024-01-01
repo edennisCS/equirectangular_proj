@@ -8,6 +8,7 @@ def cartesian_to_equirectangular(x, y, z):
     lat = np.degrees(np.arcsin(np.clip(z / np.sqrt(x**2 + y**2 + z**2), -1, 1)))
     return lon, lat
 
+# Placeholder formula for the distortion we will want to use equirectangular one
 def generate_distorted_mesh_grid(x, y):
     distortion_factor = 0.2
     distorted_x = x + distortion_factor * np.sin(y)
@@ -16,7 +17,7 @@ def generate_distorted_mesh_grid(x, y):
 
 # Loading up an image
 image = Image.open("dwswes.png")
-new_size = (200, 100)
+new_size = (300, 300)
 resized_image = image.resize(new_size)
 
 # Set image size
@@ -25,6 +26,7 @@ width, height = new_size
 x = np.linspace(0, 10, width)
 y = np.linspace(0, 10, height)
 x, y = np.meshgrid(x, y)
+
 
 distorted_x, distorted_y = generate_distorted_mesh_grid(x, y)
 
