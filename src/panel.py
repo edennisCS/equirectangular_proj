@@ -20,8 +20,8 @@ class Panel:
     print('will generate equirectangular meshgrid')
 
   def render_equirectangular_meshgrid(self, plot):
-    # render equirectangular meshgrid to plot
-    print('will generate equirectangular meshgrid')
+    # render equirectangular distorted meshgrid to plot
+    print('will render equirectangular meshgrid to plot')
 
   def render(self, plot):
     print(self.image_path)
