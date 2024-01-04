@@ -1,5 +1,7 @@
 from PIL import Image
 import numpy as np
+from src.cube import Cube
+from src.panel import Panel
 import matplotlib.pyplot as plt
 
 # Function to convert Cartesian coordinates to equirectangular
@@ -16,7 +18,7 @@ def generate_distorted_mesh_grid(x, y):
     return distorted_x, distorted_y
 
 # Loading up an image
-image = Image.open("dwswes.png")
+image = Image.open("images/example1.png")
 new_size = (300, 300)
 resized_image = image.resize(new_size)
 
@@ -29,6 +31,16 @@ x, y = np.meshgrid(x, y)
 
 
 distorted_x, distorted_y = generate_distorted_mesh_grid(x, y)
+
+# Can we refactor the above code to use newly created objects
+# for development first try rendering single panel
+# panel = Panel("images/example1.png", [0, -1, 0], [0, 0, 0], 2, 2)
+# panel.render(plt)
+
+# Then we can move on to the cube
+# images = ["images/example1.png", "images/example2.png", "images/example3.png", "images/example4.png", "images/example5.png", "images/example6.png"]
+# cube = Cube(images)
+# cube.render(plt)
 
 plt.figure(figsize=(10, 10))
 plt.pcolormesh(distorted_x, distorted_y, np.array(resized_image))
