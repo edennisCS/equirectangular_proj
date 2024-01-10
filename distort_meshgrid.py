@@ -41,9 +41,26 @@ panel.render(plt)
 # cube.render(plt)
 
 plt.figure(figsize=(10, 10))
-plt.pcolormesh(distorted_x, distorted_y, np.array(resized_image))
-plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
-plt.show()
+
+# Create a Panel object
+panel = Panel(image_path, [0, -1, 0], [0, 0, 0], 2, 2)
+panel.render(plt)
+
+# Create a Cube object
+images = ["images/example1.png", "images/example2.png", "images/example3.png", "images/example4.png", "images/example5.png", "images/example6.png"]
+cube = Cube(images)
+
+# Render the cube
+cube.render(plt)
+
+
+
+# plt.figure(figsize=(10, 10))
+# plt.pcolormesh(distorted_x, distorted_y, np.array(resized_image))
+# plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
+# plt.show()
+
+
 
 # Can we refactor the above code to use newly created objects
 # for development first try rendering single panel
