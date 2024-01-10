@@ -19,9 +19,9 @@ def generate_distorted_mesh_grid(x, y):
     return distorted_x, distorted_y
 
 # Loading up an image
-image_path = "images/example1.png"
+images = ["images/example1.png", "images/example2.png", "images/example3.png", "images/example4.png",
+          "images/example5.png", "images/example6.png"]
 new_size = (300, 300)
-resized_image = Image.open(image_path).resize(new_size)
 
 # Set image size
 width, height = new_size
@@ -33,46 +33,24 @@ x, y = np.meshgrid(x, y)
 distorted_x, distorted_y = generate_distorted_mesh_grid(x, y)
 
 # Panel
-panel = Panel(image_path, [0, -1, 0], [0, 0, 0], 2, 2)
-panel.render(plt)
-
-# images = [f"images/example{i}.png" for i in range(1, 7)]
-# cube = Cube(images)
-# cube.render(plt)
-
-plt.figure(figsize=(10, 10))
-
-# Create a Panel object
-panel = Panel(image_path, [0, -1, 0], [0, 0, 0], 2, 2)
-panel.render(plt)
+# panel = Panel(image_path, [0, -1, 0], [0, 0, 0], 2, 2)
+# panel.render(plt)
 
 # Create a Cube object
 images = ["images/example1.png", "images/example2.png", "images/example3.png", "images/example4.png", "images/example5.png", "images/example6.png"]
 cube = Cube(images)
 
-# Render the cube
-cube.render(plt)
+for i, panel_config in enumerate(cube.panel_configuration):
+    panel = Panel(images[i], panel_config['angle'], panel_config['position'], panel_config['width'], panel_config['height'])
+    panel.render(plt)
+
+    resized_distorted_image = Image.open(images[0]).resize(new_size)
+    plt.figure(figsize=(10, 10))
+    plt.pcolormesh(distorted_x, distorted_y, np.array(Image.open(images[0]).resize(new_size)))
+    plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
+    plt.show()
 
 
 
-# plt.figure(figsize=(10, 10))
-# plt.pcolormesh(distorted_x, distorted_y, np.array(resized_image))
-# plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
-# plt.show()
 
 
-
-# Can we refactor the above code to use newly created objects
-# for development first try rendering single panel
-# panel = Panel("images/example1.png", [0, -1, 0], [0, 0, 0], 2, 2)
-# panel.render(plt)
-
-# Then we can move on to the cube
-# images = ["images/example1.png", "images/example2.png", "images/example3.png", "images/example4.png", "images/example5.png", "images/example6.png"]
-# cube = Cube(images)
-# cube.render(plt)
-
-# plt.figure(figsize=(10, 10))
-# plt.pcolormesh(distorted_x, distorted_y, np.array(resized_image))
-# plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
-# plt.show()
