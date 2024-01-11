@@ -8,6 +8,3 @@ class Tesselation:
   def createPanel(_self, config, image_path):
     return Panel(image_path, config['angle'], config['position'], config['width'], config['height'])
 
-  def render(self, plot):
-    for panel in self.panels:
-      panel.render(plot)
