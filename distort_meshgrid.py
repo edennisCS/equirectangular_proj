@@ -5,6 +5,25 @@ from src.panel import Panel
 import matplotlib.pyplot as plt
 
 
+# Plot figure plt width 2000 height 1000
+
+
+# Define our panel (instantiate panel)
+
+
+# Do a function to create a mesh grid from that panel - flat to start
+
+
+# Then transform to cartesian space at the angle of object
+
+
+# Then equirectangular point is the same, 
+
+
+
+
+
+
 # Function to convert Cartesian coordinates to equirectangular
 def cartesian_to_equirectangular(x, y, z):
     lon = np.degrees(np.arctan2(x, y))
@@ -40,15 +59,26 @@ distorted_x, distorted_y = generate_distorted_mesh_grid(x, y)
 images = ["images/example1.png", "images/example2.png", "images/example3.png", "images/example4.png", "images/example5.png", "images/example6.png"]
 cube = Cube(images)
 
-for i, panel_config in enumerate(cube.panel_configuration):
-    panel = Panel(images[i], panel_config['angle'], panel_config['position'], panel_config['width'], panel_config['height'])
-    panel.render(plt)
 
-    resized_distorted_image = Image.open(images[0]).resize(new_size)
-    plt.figure(figsize=(10, 10))
-    plt.pcolormesh(distorted_x, distorted_y, np.array(Image.open(images[0]).resize(new_size)))
-    plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
-    plt.show()
+
+panel = Panel("images/example1.png",  [0, 0, 0], [0, -1, 0], 2, 2)
+panel.render(plt)
+
+resized_distorted_image = Image.open(images[0]).resize(new_size)
+plt.figure(figsize=(10, 10))
+plt.pcolormesh(distorted_x, distorted_y, np.array(Image.open(images[0]).resize(new_size)))
+plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
+plt.show()
+
+# for i, panel_config in enumerate(cube.panel_configuration):
+#     panel = Panel(images[i], panel_config['angle'], panel_config['position'], panel_config['width'], panel_config['height'])
+#     panel.render(plt)
+#
+#     resized_distorted_image = Image.open(images[0]).resize(new_size)
+#     plt.figure(figsize=(10, 10))
+#     plt.pcolormesh(distorted_x, distorted_y, np.array(Image.open(images[0]).resize(new_size)))
+#     plt.plot(distorted_x, distorted_y, ".k", markersize=1)  # Points on top
+#     plt.show()
 
 
 
