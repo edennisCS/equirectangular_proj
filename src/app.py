@@ -37,13 +37,17 @@ class App(tk.Tk):
         "Isocahedron": Cube
     }
 
+    window_size = '2000x1000'
+    file_select_column_number = 3
+    paddings = {'padx': 5, 'pady': 5}
+
     def __init__(self):
         super().__init__()
 
         # create the root window
         self.title('Select a tesselation')
         self.resizable(True, True)
-        self.geometry('2000x1000')
+        self.geometry(self.window_size)
 
         # datatype of selected tesselation
         self.selected_tesselation = tk.StringVar(self)
@@ -56,7 +60,6 @@ class App(tk.Tk):
         self.create_generate_button()
 
     def create_teselation_select(self):
-        self.paddings = {'padx': 5, 'pady': 5}
 
         # label
         label = ttk.Label(self, text='Select a Tesselation:')
@@ -73,7 +76,7 @@ class App(tk.Tk):
         option_menu.grid(column=1, row=0, sticky=tk.W, **self.paddings)
 
         # output label
-        self.output_label = ttk.Label(self, foreground='red', text = "Selected tesselation has % s sides" % self.sides_per_tesselation[self.selected_tesselation.get()] )
+        self.output_label = ttk.Label(self, foreground='red', text = f"Selected tesselation has {self.tesselation_side_count()} sides" )
         self.output_label.grid(column=0, row=1, sticky=tk.W, **self.paddings)
 
     def create_file_selects(self):
@@ -86,13 +89,13 @@ class App(tk.Tk):
             # indivdual file select button
             self.file_selects.append(ttk.Button(
                 self,
-                text='Select image for side % s' % (side_number + 1),
+                text=f"Select image for side {side_number + 1}",
                 command= partial(self.select_file, side_number)
             ))
 
             # we divide the file selects into rows of 3 starting under existing buttons
-            column_number = 2*(side_number % 3)
-            row_number = int((side_number / 3) + 2)
+            column_number = 2*(side_number % self.file_select_column_number)
+            row_number = int((side_number / self.file_select_column_number) + 2)
 
             self.file_selects[-1].grid(column=column_number, row=row_number, sticky=tk.W, **self.paddings)
 
@@ -113,14 +116,14 @@ class App(tk.Tk):
         )
 
         # put the generate button below all the file selects
-        row_number = int((len(self.file_selects) / 3) + 3)
+        row_number = int((len(self.file_selects) / self.file_select_column_number) + 3)
         self.generate_button.grid(column=0, row=row_number, sticky=tk.W, **self.paddings)
 
     def generateTesselation(self):
         # ensure a file is selected for every side
         for side_number in list(range(0, self.sides_per_tesselation[self.selected_tesselation.get()])):
             if(self.selected_filenames.get(side_number) is None):
-                return showerror("Missing side", "Select an image for side: % s" % (side_number + 1))
+                return showerror("Missing side", f"Select image for side: {side_number + 1}")
 
         # find class of selected tesselation
         tesselation_class = self.tesselation_classes_by_name[self.selected_tesselation.get()]
@@ -144,7 +147,7 @@ class App(tk.Tk):
 
     def tesselation_selected(self, *args):
         # update teselation selected text for the sides of selected tesselation
-        self.output_label['text'] = "Selected tesselation has % s sides" % self.sides_per_tesselation[self.selected_tesselation.get()] 
+        self.output_label['text'] = f"Selected tesselation has {self.tesselation_side_count()} sides"
 
         # destroy existing file selects as a new number is needed for the newly selected tesselation
         self.destroy_file_selects()
@@ -169,4 +172,7 @@ class App(tk.Tk):
         # if a file is selected update the selected file for the side
         if(len(filename) != 0):
             self.selected_filenames[side_number] = filename
-            self.file_select_labels[side_number]['text'] = "Selected image % s" % Path(filename).name
+            self.file_select_labels[side_number]['text'] = f"Selected image {Path(filename).name}"
+
+    def tesselation_side_count(self):
+        return self.sides_per_tesselation[self.selected_tesselation.get()]
