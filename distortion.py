@@ -7,6 +7,10 @@ from src.panel import Panel
 import matplotlib.pyplot as plt
 import scipy
 
+def cartesian_to_equirectangular(x, y, z):
+    lon = np.degrees(np.arctan2(x, y))
+    lat = np.degrees(np.arcsin(np.clip(z / np.sqrt(x**2 + y**2 + z**2), -1, 1)))
+    return lon, lat
 
 # the order is z, x, y
 def generate_cartesian_mesh_grid(x, y, z, angle, position):
@@ -17,10 +21,12 @@ def generate_cartesian_mesh_grid(x, y, z, angle, position):
     # translate position, move to the position
     rotation_matrix = Rotation.from_euler('zxy', np.array([angle]))
 
-    # apply rotation
-    coordinates = np.vstack((x.flatten(), y.flatten(), z.flatten()))
-    rotated_coords = rotation_matrix.apply(coordinates)
-    cartesian_x, cartesian_y, cartesian_z = rotated_x + position[0], rotated_y + position[0], rotated_z + position[0]
+    mult = rotation_matrix.apply(np.array([x.ravel(), y.ravel(), z.ravel()]).transpose())
+    xrot = mult[:, 0].reshape(x.shape)
+    yrot = mult[:, 1].reshape(y.shape)
+    zrot = mult[:, 2].reshape(z.shape)
+
+    cartesian_x, cartesian_y, cartesian_z = xrot + position[0], yrot + position[1], zrot + position[2]
     return cartesian_x, cartesian_y, cartesian_z
 
 
@@ -30,13 +36,21 @@ plt.figure(figsize=(2000, 1000))
 panel = Panel("images/example1.png", [0, 0, 0], [0, -1, 0], 2, 2)
 
 x_initial = np.linspace(0, panel.width, 100)
-y_initial = np.linspace(0, panel.height, 100)
-z_initial = 0
+y_initial = np.linspace(0, 0, 100)
+z_initial = np.linspace(0, panel.height, 100)
 
 x_untransformed, y_untransformed, z_untransformed = np.meshgrid(x_initial, y_initial, z_initial)
 
 cart_x, cart_y, cart_z = generate_cartesian_mesh_grid(x_initial, y_initial, z_initial, panel.angle, panel.position)
 print(cart_x, cart_y, cart_z)
+cartesian_to_equirectangular(cart_x, cart_y, cart_z)
+lon, lat = cartesian_to_equirectangular(cart_x, cart_y, cart_z)
+print(lon, lat)
+plt.pcolormesh(lon, lat, np.array(Image.open(panel.image_path).resize((100, 100))))
+plt.show()
+
+
+
 
 
 
