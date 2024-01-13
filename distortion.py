@@ -21,9 +21,7 @@ def generate_distorted_mesh_grid(x, y):
 
 def apply_rotational_transformation(coordinate, angle):
     rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
-
-    rotated_coordinate = rotation_matrix.apply(coordinate).flatten() 
-
+    rotated_coordinate = rotation_matrix.apply(coordinate).flatten()
     return rotated_coordinate 
 
 def apply_translation_transformation(coordinate, translation):
@@ -33,14 +31,21 @@ def apply_translation_transformation(coordinate, translation):
 
 plt.figure(figsize=(20, 10))
 
-panel1 = Panel("r", [0, 0, 0], [0, -1, 0], 2, 2)
-panel2 = Panel("g", [180, 0, 0], [0, 1, 0], 2, 2)
-panel3 = Panel("b", [90, -90, 0], [1, 0, 0], 2, 2)
-panel4 = Panel("b", [90, 90, 0], [-1, 0, 0], 2, 2)
-panel5 = Panel("y", [0, 90, 0], [0, 0, 1], 2, 2)
-panel6 = Panel("y", [0, 90, 0], [0, 0, -1], 2, 2)
+panels = [
+    Panel("r", [0, 0, 0], [0, -1, 0], 2, 2),
+    Panel("g", [180, 0, 0], [0, 1, 0], 2, 2),
+    Panel("b", [90, -90, 0], [1, 0, 0], 2, 2),
+    Panel("b", [90, 90, 0], [-1, 0, 0], 2, 2),
+    Panel("y", [0, 90, 0], [0, 0, 1], 2, 2),
+    Panel("y", [0, 90, 0], [0, 0, -1], 2, 2)
+]
 
-for panel in [panel1, panel2, panel3, panel4, panel5, panel6]:
+cube_instance = Cube()
+
+# # Accessing panels in the list
+# for panel in panels:
+
+for panel in panels:
     x_initial = np.linspace(-panel.width/2, panel.width/2, 50)
     y_initial = np.linspace(0, 0, 50)
     z_initial = np.linspace(-panel.width/2, panel.height/2, 50)
@@ -55,7 +60,7 @@ for panel in [panel1, panel2, panel3, panel4, panel5, panel6]:
 
     lon = equi_coordinates[:, 0]
     lat = equi_coordinates[:, 1]
-    plt.scatter(lon, lat, marker='.', label='Cube Map', c= panel.image_path)
+    plt.scatter(lon, lat, marker='.', label='Cube Map', c=panel.image_path)
 
 plt.axis('off')
 plt.ylim([-90, 90])
