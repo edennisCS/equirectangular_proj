@@ -2,11 +2,13 @@ import numpy as np
 
 
 class Panel:
-  def __init__(self, image_path, angle, position, width, height):
-    self.image_path = image_path
+  def __init__(self, colour, angle, position, width, height):
+    self.colour = colour
     self.angle = angle
     self.position = position
     self.width = width
     self.height = height
+
+
 
 

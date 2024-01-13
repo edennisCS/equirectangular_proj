@@ -84,7 +84,7 @@ def plot_panels(panels):
 
         lon = equi_coordinates[:, 0]
         lat = equi_coordinates[:, 1]
-        plt.scatter(lon, lat, marker='.', label='Cube Map', c=panel.image_path)
+        plt.scatter(lon, lat, marker='.', label='Cube Map')
 
     plt.axis('off')
     plt.ylim([-90, 90])
@@ -103,5 +103,11 @@ panels = [
     Panel("y", [0, 90, 0], [0, 0, 1], 2, 2),
     Panel("y", [0, 90, 0], [0, 0, -1], 2, 2)
 ]
+
+cube_instance = Cube()
+
+for panel in cube_instance.panels:
+    # print(f"Colour {panel.colour} Position: {panel.position}, Angle: {panel.angle}, Width: {panel.width}, Height: {panel.height}")
+    pass
 
 plot_panels(panels)
