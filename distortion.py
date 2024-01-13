@@ -1,4 +1,3 @@
-from PIL import Image
 import numpy as np
 from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
