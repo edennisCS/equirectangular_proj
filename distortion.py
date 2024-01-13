@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from src.cube import Cube
 from src.panel import Panel
 
-
+# Function to convert Cartesian coordinates to equirectangular
 def cartesian_to_equirectangular(coordinate):
     """
 
@@ -17,7 +17,7 @@ def cartesian_to_equirectangular(coordinate):
         np.clip(coordinate[1] / np.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2 + coordinate[2] ** 2), -1, 1)))
     return np.array([lon, lat])
 
-
+# Function to return the rotated coordinates using euler
 def apply_rotational_transformation(coordinate, angle):
     """
 
@@ -29,7 +29,7 @@ def apply_rotational_transformation(coordinate, angle):
     rotated_coordinate = rotation_matrix.apply(coordinate).flatten()
     return rotated_coordinate
 
-
+# Function to apply translation
 def apply_translation_transformation(coordinate, translation):
     """
 
@@ -40,7 +40,7 @@ def apply_translation_transformation(coordinate, translation):
     """
     return coordinate + translation
 
-
+# Function to generate coordinates using panel
 def generate_coordinates(panel):
     """
 
@@ -55,7 +55,7 @@ def generate_coordinates(panel):
     coordinates = np.column_stack((x_grid.ravel(), y_grid.ravel(), z_grid.ravel()))
     return coordinates
 
-
+# Function to apply transforms onto the coordinates
 def apply_transformations(coordinates, angle, translation):
     """
 
@@ -70,7 +70,7 @@ def apply_transformations(coordinates, angle, translation):
     equi_coordinates = np.apply_along_axis(cartesian_to_equirectangular, axis=1, arr=transformed_coordinates)
     return equi_coordinates
 
-
+# The main logic of plotting the panels
 def plot_panels(panels):
     """
 
