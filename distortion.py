@@ -7,58 +7,59 @@ from src.panel import Panel
 import matplotlib.pyplot as plt
 import scipy
 
+def cartesian_to_equirectangular(coordinate):
+    lon = np.degrees(np.arctan2(coordinate[0], coordinate[2]))
+    lat = np.degrees(np.arcsin(np.clip(coordinate[1]/ np.sqrt(coordinate[0]**2 + coordinate[1]**2 + coordinate[2]**2), -1, 1)))
 
+    return np.array([lon, lat])
 
-def cartesian_to_equirectangular(x, y, z):
-    lon = np.degrees(np.arctan2(x, y))
-    lat = np.degrees(np.arcsin(z / np.sqrt(x**2 + y**2 + z**2)))
-    return lon, lat
+def generate_distorted_mesh_grid(x, y):
+    distortion_factor = 0.2
+    distorted_x = x + distortion_factor * np.sin(y)
+    distorted_y = y + distortion_factor * np.cos(x)
+    return distorted_x, distorted_y
 
-# the order is z, x, y
-def generate_cartesian_mesh_grid(x, y, z, angle, position):
-    # rotation on 3 axis
-    # rotation around z, define the rotation matrix
-    # rotation around x, "
-    # rotation around y, "
-    # translate position, move to the position
-    rotation_matrix = Rotation.from_euler('zxy', np.array([angle]))
+def apply_rotational_transformation(coordinate, angle):
+    rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
 
-    mult = rotation_matrix.apply(np.array([x.ravel(), y.ravel(), z.ravel()]).transpose())
-    xrot = mult[:, 0]
-    yrot = mult[:, 1]
-    zrot = mult[:, 2]
+    rotated_coordinate = rotation_matrix.apply(coordinate).flatten() 
 
-    cartesian_x, cartesian_y, cartesian_z = xrot + position[0], yrot + position[1], zrot + position[2]
-    return cartesian_x, cartesian_y, cartesian_z
+    return rotated_coordinate 
 
+def apply_translation_transformation(coordinate, translation):
+    return coordinate + translation
 
 # Plot figure plt width 2000 height 1000
 
-plt.figure(figsize=(2000, 1000))
-panel = Panel("images/example1.png", [0, 0, 0], [0, -1, 0], 2, 2)
+plt.figure(figsize=(20, 10))
 
-x_initial = np.linspace(-panel.width/2, panel.width/2, 100)
-y_initial = np.linspace(0, 0, 100)
-z_initial = np.linspace(-panel.width/2, panel.height/2, 100)
+panel1 = Panel("r", [0, 0, 0], [0, -1, 0], 2, 2)
+panel2 = Panel("g", [180, 0, 0], [0, 1, 0], 2, 2)
+panel3 = Panel("b", [90, -90, 0], [1, 0, 0], 2, 2)
+panel4 = Panel("b", [90, 90, 0], [-1, 0, 0], 2, 2)
+panel5 = Panel("y", [0, 90, 0], [0, 0, 1], 2, 2)
+panel6 = Panel("y", [0, 90, 0], [0, 0, -1], 2, 2)
 
-x_untransformed, y_untransformed, z_untransformed = np.meshgrid(x_initial, y_initial, z_initial)
+for panel in [panel1, panel2, panel3, panel4, panel5, panel6]:
+    x_initial = np.linspace(-panel.width/2, panel.width/2, 50)
+    y_initial = np.linspace(0, 0, 50)
+    z_initial = np.linspace(-panel.width/2, panel.height/2, 50)
 
-cart_x, cart_y, cart_z = generate_cartesian_mesh_grid(x_initial, y_initial, z_initial, panel.angle, panel.position)
-print(cart_x, cart_y, cart_z)
-cartesian_to_equirectangular(cart_x, cart_y, cart_z)
-lon, lat = cartesian_to_equirectangular(cart_x, cart_y, cart_z)
-print(lon, lat)
-plt.pcolormesh(lon, lat, np.array(Image.open(panel.image_path).resize((100, 100))))
+    x_grid, y_grid, z_grid = np.meshgrid(x_initial, y_initial, z_initial)
+
+    coordinates = np.column_stack((x_grid.ravel(), y_grid.ravel(), z_grid.ravel()))
+
+    rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, angle=panel.angle)
+    transformed_coordinates = np.apply_along_axis(apply_translation_transformation, axis=1, arr=rotated_coordinates, translation=panel.position)
+    equi_coordinates = np.apply_along_axis(cartesian_to_equirectangular, axis=1, arr=transformed_coordinates)
+
+    lon = equi_coordinates[:, 0]
+    lat = equi_coordinates[:, 1]
+    plt.scatter(lon, lat, marker='.', label='Cube Map', c= panel.image_path)
+
+plt.axis('off')
+plt.ylim([-90, 90])
+plt.xlim([-180, 180])
+plt.margins(0)
+plt.savefig('image.png', bbox_inches='tight', pad_inches=0)
 plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
