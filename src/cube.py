@@ -40,7 +40,3 @@ class Cube(Tesselation):
               'height': 2
           }
   ]
-  # def __init__(self):
-  #     super().__init__()
-  #     self.panels = [Panel(colour, config['position'], config['angle'], config['width'], config['height'])
-  #                      for colour, config in zip(['r', 'g', 'b', 'b', 'y', 'y'], self.panel_configuration)]

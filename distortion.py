@@ -90,7 +90,7 @@ def plot_panels(panels):
     plt.ylim([-90, 90])
     plt.xlim([-180, 180])
     plt.margins(0)
-    plt.savefig('image.png', bbox_inches='tight', pad_inches=0)
+    plt.savefig('equirectangular.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
 
@@ -111,4 +111,4 @@ for panel in cube_instance.panels:
 
 
 # plot_panels(panels)
-# plot_panels(cube_instance.panels)
+plot_panels(cube_instance.panels)
