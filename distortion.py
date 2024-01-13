@@ -6,18 +6,23 @@ import matplotlib.pyplot as plt
 from src.cube import Cube
 from src.panel import Panel
 
+
 def cartesian_to_equirectangular(coordinate):
     lon = np.degrees(np.arctan2(coordinate[0], coordinate[2]))
-    lat = np.degrees(np.arcsin(np.clip(coordinate[1]/ np.sqrt(coordinate[0]**2 + coordinate[1]**2 + coordinate[2]**2), -1, 1)))
+    lat = np.degrees(np.arcsin(
+        np.clip(coordinate[1] / np.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2 + coordinate[2] ** 2), -1, 1)))
     return np.array([lon, lat])
+
 
 def apply_rotational_transformation(coordinate, angle):
     rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
     rotated_coordinate = rotation_matrix.apply(coordinate).flatten()
     return rotated_coordinate
 
+
 def apply_translation_transformation(coordinate, translation):
     return coordinate + translation
+
 
 def generate_coordinates(panel):
     x_initial = np.linspace(-panel.width / 2, panel.width / 2, 50)
@@ -28,11 +33,14 @@ def generate_coordinates(panel):
     coordinates = np.column_stack((x_grid.ravel(), y_grid.ravel(), z_grid.ravel()))
     return coordinates
 
+
 def apply_transformations(coordinates, angle, translation):
     rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, angle=angle)
-    transformed_coordinates = np.apply_along_axis(apply_translation_transformation, axis=1, arr=rotated_coordinates, translation=translation)
+    transformed_coordinates = np.apply_along_axis(apply_translation_transformation, axis=1, arr=rotated_coordinates,
+                                                  translation=translation)
     equi_coordinates = np.apply_along_axis(cartesian_to_equirectangular, axis=1, arr=transformed_coordinates)
     return equi_coordinates
+
 
 def plot_panels(panels):
     plt.figure(figsize=(20, 10))
@@ -52,7 +60,6 @@ def plot_panels(panels):
     plt.savefig('image.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
-# Assuming your Panel class is defined with the necessary attributes and methods.
 
 # Main script
 panels = [
