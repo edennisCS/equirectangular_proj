@@ -104,11 +104,11 @@ panels = [
     Panel("y", [0, 90, 0], [0, 0, -1], 2, 2)
 ]
 
-cube_instance = Cube()
+cube_instance = Cube(colours=['r', 'g', 'b', 'b', 'y', 'y'])
 
 for panel in cube_instance.panels:
     print(f"Colour {panel.colour} Position: {panel.position}, Angle: {panel.angle}, Width: {panel.width}, Height: {panel.height}")
 
 
-plot_panels(panels)
+# plot_panels(panels)
 # plot_panels(cube_instance.panels)
