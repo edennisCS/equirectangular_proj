@@ -8,6 +8,11 @@ from src.panel import Panel
 
 
 def cartesian_to_equirectangular(coordinate):
+    """
+
+    :param coordinate:
+    :return: np.array([lon, lat])
+    """
     lon = np.degrees(np.arctan2(coordinate[0], coordinate[2]))
     lat = np.degrees(np.arcsin(
         np.clip(coordinate[1] / np.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2 + coordinate[2] ** 2), -1, 1)))
@@ -15,16 +20,34 @@ def cartesian_to_equirectangular(coordinate):
 
 
 def apply_rotational_transformation(coordinate, angle):
+    """
+
+    :param coordinate:
+    :param angle:
+    :return: rotated_coordinate
+    """
     rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
     rotated_coordinate = rotation_matrix.apply(coordinate).flatten()
     return rotated_coordinate
 
 
 def apply_translation_transformation(coordinate, translation):
+    """
+
+    :param coordinate:
+    :param translation:
+    :return: coordinate + translation
+
+    """
     return coordinate + translation
 
 
 def generate_coordinates(panel):
+    """
+
+    :param panel:
+    :return: coordinates
+    """
     x_initial = np.linspace(-panel.width / 2, panel.width / 2, 50)
     y_initial = np.linspace(0, 0, 50)
     z_initial = np.linspace(-panel.width / 2, panel.height / 2, 50)
@@ -35,6 +58,13 @@ def generate_coordinates(panel):
 
 
 def apply_transformations(coordinates, angle, translation):
+    """
+
+    :param coordinates:
+    :param angle:
+    :param translation:
+    :return: equi_coordinates
+    """
     rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, angle=angle)
     transformed_coordinates = np.apply_along_axis(apply_translation_transformation, axis=1, arr=rotated_coordinates,
                                                   translation=translation)
@@ -43,6 +73,10 @@ def apply_transformations(coordinates, angle, translation):
 
 
 def plot_panels(panels):
+    """
+
+    :param panels:
+    """
     plt.figure(figsize=(20, 10))
 
     for panel in panels:
