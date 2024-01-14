@@ -121,20 +121,6 @@ class App(tk.Tk):
             color_button.grid(column=1, row=side_number + 2, sticky=tk.W)
             self.color_selects.append(color_button)
 
-            '''selected_color = tk.StringVar(self)
-            color_menu = ttk.OptionMenu(
-                self,
-                selected_color,
-                available_colors[0],
-                *available_colors,
-                command=partial(self.select_color, side_number)
-            )
-            color_menu.grid(column=1, row=side_number + 2, sticky=tk.W, **self.paddings)
-            self.color_selects.append(color_menu)
-            self.selected_colors[side_number] = selected_color'''
-    '''def select_color(self, side_number, choice):
-        self.selected_colors[side_number].set(choice)'''
-
     def generate_tesselation(self):
         try:
             print("Generating tesselation...")
