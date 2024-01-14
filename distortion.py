@@ -1,0 +1,110 @@
+import numpy as np
+from scipy.spatial.transform import Rotation
+import matplotlib.pyplot as plt
+
+from src.cube import Cube
+from src.panel import Panel
+
+PANEL_RESOLUTION=50
+PLOT_WIDTH=20
+PLOT_HEIGHT=10
+
+# Function to convert Cartesian coordinates to equirectangular
+def cartesian_to_equirectangular(coordinate):
+    """
+
+    :param coordinate:
+    :return: np.array([lon, lat])
+    """
+    lon = np.degrees(np.arctan2(coordinate[0], coordinate[2]))
+    lat = np.degrees(np.arcsin(
+        np.clip(coordinate[1] / np.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2 + coordinate[2] ** 2), -1, 1)))
+    return np.array([lon, lat])
+
+# Function to return the rotated coordinates using euler
+def apply_rotational_transformation(coordinate, rotation_matrix):
+    """
+
+    :param coordinate:
+    :param angle:
+    :return: rotated_coordinate
+    """
+
+    return rotation_matrix.apply(coordinate).flatten()
+
+# Function to apply translation
+def apply_translation_transformation(coordinate, translation):
+    """
+
+    :param coordinate:
+    :param translation:
+    :return: coordinate + translation
+
+    """
+    return coordinate + translation
+
+# Function to generate coordinates using panel
+def generate_coordinates(panel):
+    """
+
+    :param panel:
+    :return: coordinates
+    """
+    x_initial = np.linspace(-panel.width / 2, panel.width / 2, PANEL_RESOLUTION)
+    y_initial = np.linspace(0, 0, PANEL_RESOLUTION)
+    z_initial = np.linspace(-panel.width / 2, panel.height / 2, PANEL_RESOLUTION)
+
+    x_grid, y_grid, z_grid = np.meshgrid(x_initial, y_initial, z_initial)
+    coordinates = np.column_stack((x_grid.ravel(), y_grid.ravel(), z_grid.ravel()))
+    return coordinates
+
+# Function to apply transforms onto the coordinates
+def apply_transformations(coordinates, angle, translation):
+    """
+
+    :param coordinates:
+    :param angle:
+    :param translation:
+    :return: equi_coordinates
+    """
+    rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
+    rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, rotation_matrix=rotation_matrix)
+    transformed_coordinates = np.apply_along_axis(apply_translation_transformation, axis=1, arr=rotated_coordinates,
+                                                  translation=translation)
+    equi_coordinates = np.apply_along_axis(cartesian_to_equirectangular, axis=1, arr=transformed_coordinates)
+    return equi_coordinates
+
+# The main logic of plotting the panels
+def plot_panels(panels):
+    """
+
+    :param panels:
+    """
+    plt.figure(figsize=(PLOT_WIDTH, PLOT_HEIGHT))
+
+    for panel in panels:
+        coordinates = generate_coordinates(panel)
+        equi_coordinates = apply_transformations(coordinates, panel.angle, panel.position)
+
+        lon = equi_coordinates[:, 0]
+        lat = equi_coordinates[:, 1]
+        plt.scatter(lon, lat, marker='.', label='Cube Map', c=panel.colour)
+
+    plt.axis('off')
+    plt.ylim([-90, 90])
+    plt.xlim([-180, 180])
+    plt.margins(0)
+    plt.savefig('equirectangular.png', bbox_inches='tight', pad_inches=0)
+    plt.show()
+
+
+# Main script
+
+cube_instance = Cube(colours=['r', 'g', 'b', 'b', 'y', 'y'])
+
+for panel in cube_instance.panels:
+    print(f"Colour {panel.colour} Position: {panel.position}, Angle: {panel.angle}, Width: {panel.width}, Height: {panel.height}")
+
+
+# plot_panels(panels)
+plot_panels(cube_instance.panels)
