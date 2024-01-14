@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 from src.cube import Cube
 from src.panel import Panel
 
+PANEL_RESOLUTION=50
+PLOT_WIDTH=20
+PLOT_HEIGHT=10
+
 # Function to convert Cartesian coordinates to equirectangular
 def cartesian_to_equirectangular(coordinate):
     """
@@ -46,9 +50,9 @@ def generate_coordinates(panel):
     :param panel:
     :return: coordinates
     """
-    x_initial = np.linspace(-panel.width / 2, panel.width / 2, 50)
-    y_initial = np.linspace(0, 0, 50)
-    z_initial = np.linspace(-panel.width / 2, panel.height / 2, 50)
+    x_initial = np.linspace(-panel.width / 2, panel.width / 2, PANEL_RESOLUTION)
+    y_initial = np.linspace(0, 0, PANEL_RESOLUTION)
+    z_initial = np.linspace(-panel.width / 2, panel.height / 2, PANEL_RESOLUTION)
 
     x_grid, y_grid, z_grid = np.meshgrid(x_initial, y_initial, z_initial)
     coordinates = np.column_stack((x_grid.ravel(), y_grid.ravel(), z_grid.ravel()))
@@ -76,7 +80,7 @@ def plot_panels(panels):
 
     :param panels:
     """
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=(PLOT_WIDTH, PLOT_HEIGHT))
 
     for panel in panels:
         coordinates = generate_coordinates(panel)
@@ -84,7 +88,7 @@ def plot_panels(panels):
 
         lon = equi_coordinates[:, 0]
         lat = equi_coordinates[:, 1]
-        plt.scatter(lon, lat, marker='.', label='Cube Map')
+        plt.scatter(lon, lat, marker='.', label='Cube Map', c=panel.colour)
 
     plt.axis('off')
     plt.ylim([-90, 90])
@@ -95,14 +99,6 @@ def plot_panels(panels):
 
 
 # Main script
-panels = [
-    Panel("r", [0, 0, 0], [0, -1, 0], 2, 2),
-    Panel("g", [180, 0, 0], [0, 1, 0], 2, 2),
-    Panel("b", [90, -90, 0], [1, 0, 0], 2, 2),
-    Panel("b", [90, 90, 0], [-1, 0, 0], 2, 2),
-    Panel("y", [0, 90, 0], [0, 0, 1], 2, 2),
-    Panel("y", [0, 90, 0], [0, 0, -1], 2, 2)
-]
 
 cube_instance = Cube(colours=['r', 'g', 'b', 'b', 'y', 'y'])
 
