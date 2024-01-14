@@ -110,6 +110,18 @@ def plot_panels(panels, face_geometry):
     plt.savefig('equirectangular.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
+def sierpinski_panels(panels):
+    generated_panels = []
+
+    for panel in panels:
+        centre_displacements = np.array([[0, 0, (1/2)*panel.height/2.75], [panel.width/4, 0, -panel.height/8], [-panel.width/4, 0, -panel.height/8]])
+        rotated_displacements = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=centre_displacements, angle=panel.angle)
+
+        for displacement in rotated_displacements:
+            generated_panels.append(Panel("y", panel.angle, panel.position + displacement, panel.width/2, panel.height/2))
+
+    return generated_panels
+
 
 # Main script
 panels = [
