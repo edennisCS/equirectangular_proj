@@ -18,16 +18,15 @@ def cartesian_to_equirectangular(coordinate):
     return np.array([lon, lat])
 
 # Function to return the rotated coordinates using euler
-def apply_rotational_transformation(coordinate, angle):
+def apply_rotational_transformation(coordinate, rotation_matrix):
     """
 
     :param coordinate:
     :param angle:
     :return: rotated_coordinate
     """
-    rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
-    rotated_coordinate = rotation_matrix.apply(coordinate).flatten()
-    return rotated_coordinate
+
+    return rotation_matrix.apply(coordinate).flatten()
 
 # Function to apply translation
 def apply_translation_transformation(coordinate, translation):
@@ -64,7 +63,8 @@ def apply_transformations(coordinates, angle, translation):
     :param translation:
     :return: equi_coordinates
     """
-    rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, angle=angle)
+    rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
+    rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, rotation_matrix=rotation_matrix)
     transformed_coordinates = np.apply_along_axis(apply_translation_transformation, axis=1, arr=rotated_coordinates,
                                                   translation=translation)
     equi_coordinates = np.apply_along_axis(cartesian_to_equirectangular, axis=1, arr=transformed_coordinates)
