@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 
 from distortion import plot_panels
 from src.cube import Cube
+from src.octohedron import Octohedron
 
 
 class App(tk.Tk):
@@ -17,11 +18,16 @@ class App(tk.Tk):
     #     "Cube": 6,
     # }
 
-    tesselations = {
-            "Cube": {
-                "sides": 6
-                }
-            }
+    tessellations = {
+        "Cube": {
+            "sides": 6,
+            "klass": Cube
+        },
+        "Octahedron": {
+            "sides": 8,
+            "klass": Octohedron
+        },
+    }
 
     # # placeholder use cube for all for poc to be edited with other tessellations when complete
     # tesselation_classes_by_name = {
@@ -61,9 +67,7 @@ class App(tk.Tk):
 
     def update_color_vars(self):
         tesselation_type = self.selected_tesselation.get()
-        print(tesselation_type)
-        print(self.tesselations[tesselation_type])
-        number_of_sides = self.tesselations[tesselation_type]["sides"]
+        number_of_sides = self.tessellations[tesselation_type]["sides"]
         self.color_vars = [tk.StringVar() for _ in range(number_of_sides)]
 
     def create_tesselation_select(self):
@@ -71,19 +75,20 @@ class App(tk.Tk):
         # label
         label = ttk.Label(self, text='Select a Tesselation:')
         label.grid(column=0, row=0, sticky=tk.W, **self.paddings)
-        print(f"Th: {list(self.tesselations.keys())}")
+        print(f"Th: {list(self.tessellations.keys())}")
         # option menu
         option_menu = ttk.OptionMenu(
             self,
             self.selected_tesselation,
-            list(self.tesselations.keys())[0],
-            *list(self.tesselations.keys()),
+            list(self.tessellations.keys())[0],
+            *list(self.tessellations.keys()),
             command=self.tesselation_selected)
 
         option_menu.grid(column=1, row=0, sticky=tk.W, **self.paddings)
 
         # output label showing the number of sides for the selected tesselation
-        self.output_label = ttk.Label(self, foreground='red', text=f"Selected tesselation has {self.tesselation_side_count()} sides")
+        self.output_label = ttk.Label(self, foreground='red',
+                                      text=f"Selected tesselation has {self.tesselation_side_count()} sides")
         self.output_label.grid(column=0, row=1, sticky=tk.W, **self.paddings)
         print(f'Tesselation 1: {self.selected_tesselation.get()}')
 
@@ -106,14 +111,8 @@ class App(tk.Tk):
         self.color_select_labels = []
         self.color_vars = []
 
-        for label in self.color_selects:
-            label.destroy()
-        for color_select in self.color_selects:
-            color_select.destroy()
-
-
-        #available_colors = ("Red", "Green", "Blue", "Purple", "Yellow", "Pink")
-        for side_number in range(self.tesselations[self.selected_tesselation.get()]["sides"]):
+        # available_colors = ("Red", "Green", "Blue", "Purple", "Yellow", "Pink")
+        for side_number in range(self.tessellations[self.selected_tesselation.get()]["sides"]):
             label = ttk.Label(self, text=f'Color for side {side_number + 1}:')
             label.grid(column=0, row=side_number + 2, sticky=tk.W, **self.paddings)
             self.color_select_labels.append(label)
@@ -135,8 +134,8 @@ class App(tk.Tk):
 
             colors = [color_var.get() for color_var in self.color_vars]
             print(colors)
-            cube_instance = Cube(colours=colors)
-            plot_panels(cube_instance.panels, cube_instance.face_geometry)
+            tesselation_instance = self.tessellations[self.selected_tesselation.get()]["klass"](colours=colors)
+            plot_panels(tesselation_instance.panels, tesselation_instance.face_geometry)
             messagebox.showinfo("Success", "The tesselation was generated successfully.")
             print("Tesselation generated successfully.")
 
@@ -147,14 +146,21 @@ class App(tk.Tk):
     def tesselation_selected(self, *args):
         # update tesselation selected text for the sides of selected tesselation
         self.output_label['text'] = f"Selected tesselation has {self.tesselation_side_count()} sides"
+        self.generate_button.destroy()
 
+        for label in self.color_select_labels:
+            label.destroy()
+        for color_select in self.color_selects:
+            color_select.destroy()
         # recreate a new number of file selects for the number of sides in new tesselation
+
         self.create_color_selects()
+
         self.create_generate_button()
 
     def tesselation_side_count(self):
         print(f'tesselation: {self.selected_tesselation.get()}')
-        return self.tesselations[self.selected_tesselation.get()]["sides"]
+        return self.tessellations[self.selected_tesselation.get()]["sides"]
 
 
 if __name__ == "__main__":
