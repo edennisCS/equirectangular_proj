@@ -7,6 +7,10 @@ from src.cube import Cube
 from src.octohedron import Octohedron
 from src.panel import Panel
 
+PANEL_RESOLUTION=50
+PLOT_WIDTH=20
+PLOT_HEIGHT=10
+
 # Function to convert Cartesian coordinates to equirectangular
 def cartesian_to_equirectangular(coordinate):
     """
@@ -20,16 +24,15 @@ def cartesian_to_equirectangular(coordinate):
     return np.array([lon, lat])
 
 # Function to return the rotated coordinates using euler
-def apply_rotational_transformation(coordinate, angle):
+def apply_rotational_transformation(coordinate, rotation_matrix):
     """
 
     :param coordinate:
     :param angle:
     :return: rotated_coordinate
     """
-    rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
-    rotated_coordinate = rotation_matrix.apply(coordinate).flatten()
-    return rotated_coordinate
+
+    return rotation_matrix.apply(coordinate).flatten()
 
 # Function to apply translation
 def apply_translation_transformation(coordinate, translation):
@@ -49,8 +52,8 @@ def generate_coordinates(panel, face_geometry):
     :param panel:
     :return: coordinates
     """
-    x_initial = np.linspace(-panel.width / 2, panel.width / 2, 50)
-    z_initial = np.linspace(-panel.height / 2, panel.height / 2, 50)
+    x_initial = np.linspace(-panel.width / 2, panel.width / 2,  PANEL_RESOLUTION)
+    z_initial = np.linspace(-panel.height / 2, panel.height / 2, PANEL_RESOLUTION)
 
     x_grid, z_grid = np.meshgrid(x_initial, z_initial)
     grid_array = np.column_stack((x_grid.ravel(), z_grid.ravel()))
@@ -81,7 +84,8 @@ def apply_transformations(coordinates, angle, translation):
     :param translation:
     :return: equi_coordinates
     """
-    rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, angle=angle)
+    rotation_matrix = Rotation.from_euler('zxy', np.array([angle]), degrees=True)
+    rotated_coordinates = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=coordinates, rotation_matrix=rotation_matrix)
     transformed_coordinates = np.apply_along_axis(apply_translation_transformation, axis=1, arr=rotated_coordinates,
                                                   translation=translation)
     equi_coordinates = np.apply_along_axis(cartesian_to_equirectangular, axis=1, arr=transformed_coordinates)
@@ -93,7 +97,7 @@ def plot_panels(panels, face_geometry):
 
     :param panels:
     """
-    plt.figure(figsize=(20, 10))
+    plt.figure(figsize=(PLOT_WIDTH, PLOT_HEIGHT))
 
     for panel in panels:
         coordinates = generate_coordinates(panel, face_geometry)
@@ -101,7 +105,7 @@ def plot_panels(panels, face_geometry):
 
         lon = equi_coordinates[:, 0]
         lat = equi_coordinates[:, 1]
-        plt.scatter(lon, lat, marker='.', label='Cube Map')
+        plt.scatter(lon, lat, marker='.', label='Cube Map', c=panel.colour)
 
     plt.axis('off')
     plt.ylim([-90, 90])
@@ -124,19 +128,6 @@ def sierpinski_panels(panels):
 
 
 # Main script
-panels = [
-    Panel("r", [0, 0, 0], [0, -1, 0], 2, 2),
-    Panel("g", [180, 0, 0], [0, 1, 0], 2, 2),
-    Panel("b", [90, -90, 0], [1, 0, 0], 2, 2),
-    Panel("b", [90, 90, 0], [-1, 0, 0], 2, 2),
-    Panel("y", [0, 90, 0], [0, 0, 1], 2, 2),
-    Panel("y", [0, 90, 0], [0, 0, -1], 2, 2)
-]
 
 cube_instance = Cube(colours=['r', 'g', 'b', 'b', 'y', 'y', 'r', 'r'])
-
-for panel in cube_instance.panels:
-    print(f"Colour {panel.colour} Position: {panel.position}, Angle: {panel.angle}, Width: {panel.width}, Height: {panel.height}")
-
-# plot_panels(panels)
 plot_panels(cube_instance.panels, cube_instance.face_geometry)
