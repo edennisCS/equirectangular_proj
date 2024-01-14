@@ -42,10 +42,10 @@ class App(tk.Tk):
 
         # datatype of selected tesselation
         self.selected_tesselation = tk.StringVar(self)
-        self.update_color_vars()
 
         # initial selected tesselation
         self.selected_tesselation.set("Cube")
+        self.update_color_vars()
         print(f'init: {self.selected_tesselation.get()}')
 
         self.create_tesselation_select()
@@ -61,6 +61,8 @@ class App(tk.Tk):
 
     def update_color_vars(self):
         tesselation_type = self.selected_tesselation.get()
+        print(tesselation_type)
+        print(self.tesselations[tesselation_type])
         number_of_sides = self.tesselations[tesselation_type]["sides"]
         self.color_vars = [tk.StringVar() for _ in range(number_of_sides)]
 
@@ -69,13 +71,13 @@ class App(tk.Tk):
         # label
         label = ttk.Label(self, text='Select a Tesselation:')
         label.grid(column=0, row=0, sticky=tk.W, **self.paddings)
-
+        print(f"Th: {list(self.tesselations.keys())}")
         # option menu
         option_menu = ttk.OptionMenu(
             self,
             self.selected_tesselation,
-            self.tesselation[0],
-            *self.tesselation,
+            list(self.tesselations.keys())[0],
+            *list(self.tesselations.keys()),
             command=self.tesselation_selected)
 
         option_menu.grid(column=1, row=0, sticky=tk.W, **self.paddings)
@@ -111,7 +113,7 @@ class App(tk.Tk):
 
 
         #available_colors = ("Red", "Green", "Blue", "Purple", "Yellow", "Pink")
-        for side_number in range(self.tesselations[tesselation_type]["sides"]):
+        for side_number in range(self.tesselations[self.selected_tesselation.get()]["sides"]):
             label = ttk.Label(self, text=f'Color for side {side_number + 1}:')
             label.grid(column=0, row=side_number + 2, sticky=tk.W, **self.paddings)
             self.color_select_labels.append(label)
@@ -127,13 +129,14 @@ class App(tk.Tk):
         try:
             print("Generating tesselation...")
             for color_var in self.color_vars:
-                if color_var.get() == "None":
+                if color_var.get() in ("None", ""):
                     tk.messagebox.showerror("Error", "Please select a color for each side.")
                     return
 
             colors = [color_var.get() for color_var in self.color_vars]
+            print(colors)
             cube_instance = Cube(colours=colors)
-            plot_panels(cube_instance.panels)
+            plot_panels(cube_instance.panels, cube_instance.face_geometry)
             messagebox.showinfo("Success", "The tesselation was generated successfully.")
             print("Tesselation generated successfully.")
 
@@ -151,7 +154,7 @@ class App(tk.Tk):
 
     def tesselation_side_count(self):
         print(f'tesselation: {self.selected_tesselation.get()}')
-        return self.tesselations[tesselation_type]["sides"]
+        return self.tesselations[self.selected_tesselation.get()]["sides"]
 
 
 if __name__ == "__main__":
