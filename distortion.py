@@ -129,5 +129,5 @@ def sierpinski_panels(panels):
 
 # Main script
 
-cube_instance = Cube(colours=['r', 'g', 'b', 'b', 'y', 'y', 'r', 'r'])
+cube_instance = Octohedron(colours=['r', 'g', 'b', 'b', 'y', 'y', 'r', 'r', 'r', 'r'])
 plot_panels(cube_instance.panels, cube_instance.face_geometry)

@@ -13,18 +13,20 @@ from src.cube import Cube
 
 
 class App(tk.Tk):
-    sides_per_tesselation = {
-        "Cube": 6,
-    }
+    # sides_per_tesselation = {
+    #     "Cube": 6,
+    # }
 
-    tesselation = (
-        "Cube",
-    )
+    tesselations = {
+            "Cube": {
+                "sides": 6
+                }
+            }
 
-    # placeholder use cube for all for poc to be edited with other tessellations when complete
-    tesselation_classes_by_name = {
-        "Cube": Cube,
-    }
+    # # placeholder use cube for all for poc to be edited with other tessellations when complete
+    # tesselation_classes_by_name = {
+    #     "Cube": Cube,
+    # }
 
     window_size = '2000x1000'
     file_select_column_number = 3
@@ -59,7 +61,7 @@ class App(tk.Tk):
 
     def update_color_vars(self):
         tesselation_type = self.selected_tesselation.get()
-        number_of_sides = self.sides_per_tesselation.get(tesselation_type, 0)
+        number_of_sides = self.tesselations[tesselation_type]["sides"]
         self.color_vars = [tk.StringVar() for _ in range(number_of_sides)]
 
     def create_tesselation_select(self):
@@ -109,7 +111,7 @@ class App(tk.Tk):
 
 
         #available_colors = ("Red", "Green", "Blue", "Purple", "Yellow", "Pink")
-        for side_number in range(self.sides_per_tesselation[self.selected_tesselation.get()]):
+        for side_number in range(self.tesselations[tesselation_type]["sides"]):
             label = ttk.Label(self, text=f'Color for side {side_number + 1}:')
             label.grid(column=0, row=side_number + 2, sticky=tk.W, **self.paddings)
             self.color_select_labels.append(label)
@@ -149,7 +151,7 @@ class App(tk.Tk):
 
     def tesselation_side_count(self):
         print(f'tesselation: {self.selected_tesselation.get()}')
-        return self.sides_per_tesselation[self.selected_tesselation.get()]
+        return self.tesselations[tesselation_type]["sides"]
 
 
 if __name__ == "__main__":
