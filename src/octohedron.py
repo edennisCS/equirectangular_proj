@@ -5,6 +5,7 @@ import numpy as np
 class Octohedron(Tesselation):
   face_geometry = "TRIANGLE" 
 
+  # 8 sides of octohedran width and height of equilateral triangle
   panel_configuration = [
           {
               'position': [1, 1, 1],

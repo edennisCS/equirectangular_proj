@@ -4,6 +4,7 @@ from src.panel import Panel
 class Cube(Tesselation):
   face_geometry = "SQUARE"
 
+  # 6 sides of a cube
   panel_configuration = [
           {
               'position': [0, -1, 0],
