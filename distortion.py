@@ -3,8 +3,6 @@ from scipy.spatial.transform import Rotation
 import matplotlib.pyplot as plt
 import matplotlib.path as mpath
 
-from src.cube import Cube
-from src.octohedron import Octohedron
 from src.panel import Panel
 
 PANEL_RESOLUTION=50
@@ -157,7 +155,7 @@ def plot_panels(panels, face_geometry):
     plt.show()
 
 # Produces one iteration of sierpinksi gasket tessellation of panels
-def sierpinski_traingle_panel_iteration(panels):
+def sierpinski_triangle_panel_iteration(panels):
     """
 
     :param panels:

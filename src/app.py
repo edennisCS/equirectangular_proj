@@ -1,13 +1,7 @@
 import tkinter as tk
 import traceback
-from functools import partial
 from tkinter import ttk, messagebox
-from tkinter.messagebox import showerror
 from tkinter import colorchooser
-import math
-
-import matplotlib.pyplot as plt
-
 from distortion import plot_panels
 from src.cube import Cube
 from src.octohedron import Octohedron
