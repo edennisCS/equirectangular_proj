@@ -1,5 +1,4 @@
 from src.tessellation import Tessellation
-from src.panel import Panel
 
 class Cube(Tessellation):
   face_geometry = "SQUARE"

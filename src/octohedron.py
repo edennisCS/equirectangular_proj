@@ -1,5 +1,4 @@
 from src.tessellation import Tessellation
-from src.panel import Panel
 import numpy as np
 
 class Octohedron(Tessellation):
