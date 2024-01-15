@@ -61,14 +61,14 @@ def generate_coordinates(panel, face_geometry):
     x_grid, z_grid = np.meshgrid(x_initial, z_initial)
     grid_array = np.column_stack((x_grid.ravel(), z_grid.ravel()))
 
-    # Cut meshgrid into triangle if tesselation has triangular geometry
+    # Cut meshgrid into triangle if tessellation has triangular geometry
     cut_grid_array = cut_meshgrid_to_triangle(grid_array, panel) if face_geometry == "TRIANGLE" else grid_array 
 
     # Insert zero value for Y coordinate in all coordinates
     coordinates = np.insert(cut_grid_array, 1, 0, axis=1)
     return coordinates
 
-# Function to cut a meshgrid to tesselation's face triangle geometry
+# Function to cut a meshgrid to tessellation's face triangle geometry
 def cut_meshgrid_to_triangle(points, panel):
    """
 
@@ -156,7 +156,7 @@ def plot_panels(panels, face_geometry):
     plt.savefig('equirectangular.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
-# Produces one iteration of sierpinksi gasket tesselation of panels
+# Produces one iteration of sierpinksi gasket tessellation of panels
 def sierpinski_traingle_panel_iteration(panels):
     """
 
