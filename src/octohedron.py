@@ -1,8 +1,8 @@
-from src.tesselation import Tesselation
+from src.tessellation import Tessellation
 from src.panel import Panel
 import numpy as np
 
-class Octohedron(Tesselation):
+class Octohedron(Tessellation):
   face_geometry = "TRIANGLE" 
 
   # 8 sides of octohedran width and height of equilateral triangle

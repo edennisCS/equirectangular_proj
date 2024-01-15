@@ -1,7 +1,7 @@
-from src.tesselation import Tesselation
+from src.tessellation import Tessellation
 from src.panel import Panel
 
-class Cube(Tesselation):
+class Cube(Tessellation):
   face_geometry = "SQUARE"
 
   # 6 sides of a cube
