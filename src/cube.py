@@ -2,6 +2,8 @@ from src.tesselation import Tesselation
 from src.panel import Panel
 
 class Cube(Tesselation):
+  face_geometry = "SQUARE"
+
   panel_configuration = [
           {
               'position': [0, -1, 0],
