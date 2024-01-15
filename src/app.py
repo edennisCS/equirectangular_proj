@@ -6,7 +6,6 @@ from distortion import plot_panels
 from src.cube import Cube
 from src.octohedron import Octohedron
 
-
 class App(tk.Tk):
     # Definition of available tessellations
     tessellations = {
