@@ -14,7 +14,7 @@ from src.octohedron import Octohedron
 
 
 class App(tk.Tk):
-    # Definition of available tesselations
+    # Definition of available tessellations
     tessellations = {
         "Cube": {
             "sides": 6,
@@ -33,19 +33,19 @@ class App(tk.Tk):
         super().__init__()
 
         # create the root window
-        self.title('Select a tesselation')
+        self.title('Select a tessellation')
         self.resizable(True, True)
         self.geometry(self.window_size)
 
-        # datatype of selected tesselation
-        self.selected_tesselation = tk.StringVar(self)
+        # datatype of selected tessellation
+        self.selected_tessellation = tk.StringVar(self)
 
-        # initial selected tesselation
-        self.selected_tesselation.set("Cube")
+        # initial selected tessellation
+        self.selected_tessellation.set("Cube")
         self.update_color_vars()
 
         # Create selects and buttons
-        self.create_tesselation_select()
+        self.create_tessellation_select()
         self.create_color_selects()
         self.create_generate_button()
 
@@ -56,34 +56,34 @@ class App(tk.Tk):
             return color_code[1]
 
     def update_color_vars(self):
-        number_of_sides = self.selected_tesselation_side_count()
+        number_of_sides = self.selected_tessellation_side_count()
         self.color_vars = [tk.StringVar() for _ in range(number_of_sides)]
 
-    def create_tesselation_select(self):
-        # label for tesselation dropdown
-        label = ttk.Label(self, text='Select a Tesselation:')
+    def create_tessellation_select(self):
+        # label for tessellation dropdown
+        label = ttk.Label(self, text='Select a Tessellation:')
         label.grid(column=0, row=0, sticky=tk.W, **self.paddings)
-        # option menu to select tesselation
+        # option menu to select tessellation
         option_menu = ttk.OptionMenu(
             self,
-            self.selected_tesselation,
-            self.tesselation_names()[0],
-            *self.tesselation_names(),
-            command=self.tesselation_selected)
+            self.selected_tessellation,
+            self.tessellation_names()[0],
+            *self.tessellation_names(),
+            command=self.tessellation_selected)
 
         option_menu.grid(column=1, row=0, sticky=tk.W, **self.paddings)
 
-        # output label showing the number of sides for the selected tesselation
+        # output label showing the number of sides for the selected tessellation
         self.output_label = ttk.Label(self, foreground='red',
-                                      text=f"Selected tesselation has {self.selected_tesselation_side_count()} sides")
+                                      text=f"Selected tessellation has {self.selected_tessellation_side_count()} sides")
         self.output_label.grid(column=0, row=1, sticky=tk.W, **self.paddings)
 
     def create_generate_button(self):
-        # a button to generate the tesselation  based on the selected images
+        # a button to generate the tessellation  based on the selected images
         self.generate_button = ttk.Button(
             self,
             text='Generate',
-            command=self.generate_tesselation
+            command=self.generate_tessellation
         )
 
         # put the generate button below all the color selects
@@ -96,7 +96,7 @@ class App(tk.Tk):
         self.color_vars = []
 
         # available_colors = ("Red", "Green", "Blue", "Purple", "Yellow", "Pink")
-        for side_number in range(self.selected_tesselation_side_count()):
+        for side_number in range(self.selected_tessellation_side_count()):
             label = ttk.Label(self, text=f'Color for side {side_number + 1}:')
             label.grid(column=0, row=side_number + 2, sticky=tk.W, **self.paddings)
             self.color_select_labels.append(label)
@@ -108,9 +108,9 @@ class App(tk.Tk):
             color_button.grid(column=1, row=side_number + 2, sticky=tk.W)
             self.color_selects.append(color_button)
 
-    def generate_tesselation(self):
+    def generate_tessellation(self):
         try:
-            print("Generating tesselation...")
+            print("Generating tessellation...")
             for color_var in self.color_vars:
                 if color_var.get() in ("None", ""):
                     tk.messagebox.showerror("Error", "Please select a color for each side.")
@@ -118,28 +118,28 @@ class App(tk.Tk):
 
             colors = [color_var.get() for color_var in self.color_vars]
             print(colors)
-            tesselation_instance = self.selected_tesselation_class()(colours=colors)
-            plot_panels(tesselation_instance.panels, tesselation_instance.face_geometry)
-            messagebox.showinfo("Success", "The tesselation was generated successfully.")
-            print("Tesselation generated successfully.")
+            tessellation_instance = self.selected_tessellation_class()(colours=colors)
+            plot_panels(tessellation_instance.panels, tessellation_instance.face_geometry)
+            messagebox.showinfo("Success", "The tessellation was generated successfully.")
+            print("Tessellation generated successfully.")
 
         except Exception as e:
             traceback.print_exc()
             tk.messagebox.showerror("Error", f"An error occurred: {e}")
 
-    def tesselation_selected(self, *args):
-        # update tesselation selected text for the sides of selected tesselation
-        self.output_label['text'] = f"Selected tesselation has {self.selected_tesselation_side_count()} sides"
+    def tessellation_selected(self, *args):
+        # update tessellation selected text for the sides of selected tessellation
+        self.output_label['text'] = f"Selected tessellation has {self.selected_tessellation_side_count()} sides"
 
 
-        # Destroy all selects specific to tesselation
-        self.destroy_tesselation_selects()
+        # Destroy all selects specific to tessellation
+        self.destroy_tessellation_selects()
 
-        # recreate a new number of file selects for the number of sides in new tesselation
+        # recreate a new number of file selects for the number of sides in new tessellation
         self.create_color_selects()
         self.create_generate_button()
 
-    def destroy_tesselation_selects(self):
+    def destroy_tessellation_selects(self):
         # Destroy generate button so it can be re-rendered in correct position
         self.generate_button.destroy()
 
@@ -149,11 +149,11 @@ class App(tk.Tk):
         for color_select in self.color_selects:
             color_select.destroy()
 
-    def selected_tesselation_class(self):
-        return self.tessellations[self.selected_tesselation.get()]["klass"]
+    def selected_tessellation_class(self):
+        return self.tessellations[self.selected_tessellation.get()]["klass"]
 
-    def tesselation_names(self):
+    def tessellation_names(self):
         return list(self.tessellations.keys())
 
-    def selected_tesselation_side_count(self):
-        return self.tessellations[self.selected_tesselation.get()]["sides"]
+    def selected_tessellation_side_count(self):
+        return self.tessellations[self.selected_tessellation.get()]["sides"]
