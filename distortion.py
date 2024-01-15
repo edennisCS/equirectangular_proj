@@ -154,7 +154,7 @@ def plot_panels(panels, face_geometry):
     plt.savefig('equirectangular.png', bbox_inches='tight', pad_inches=0)
     plt.show()
 
-# Produces one iteration of sierpinksi gasket tessellation of panels
+# Produces one iteration of sierpinksi gasket tessellation of panels unused in app but can be generated manually
 def sierpinski_triangle_panel_iteration(panels):
     """
 
@@ -169,10 +169,12 @@ def sierpinski_triangle_panel_iteration(panels):
         # Displacement of centre points of panels in next iteration from original panel centre point
         centre_displacements = np.array([[0, 0, (1/2)*panel.height/2.75], [panel.width/4, 0, -panel.height/8], [-panel.width/4, 0, -panel.height/8]])
         # Transform displacements along the orientation of the panel 
-        rotated_displacements = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=centre_displacements, angle=panel.angle)
+        rotation_matrix = Rotation.from_euler('zxy', np.array([panel.angle]), degrees=True)
+
+        rotated_displacements = np.apply_along_axis(apply_rotational_transformation, axis=1, arr=centre_displacements, rotation_matrix=rotation_matrix)
 
         # Initialise new panel for each displacement scaled by 1/2 
-        for displacement in transformed_displacements:
+        for displacement in rotated_displacements:
             generated_panels.append(Panel(panel.colour, panel.angle, panel.position + displacement, panel.width/2, panel.height/2))
 
     return generated_panels
