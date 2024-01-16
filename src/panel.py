@@ -1,5 +1,3 @@
-import numpy as np
-
 class Panel:
   def __init__(self, colour, angle, position, width, height):
     self.colour = colour

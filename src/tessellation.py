@@ -1,6 +1,6 @@
 from src.panel import Panel
 
-class Tesselation:
+class Tessellation:
     def __init__(self, colours=None):
         self.panels = [self.createPanel(config, colour) for config, colour in zip(self.panel_configuration, colours or [])]
 
