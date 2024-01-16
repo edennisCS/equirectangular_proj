@@ -1,6 +1,6 @@
 ## About The Project
 
-An easy to use way to generate 360 images using aequirectangular projection.
+An easy to use way to generate 360 images using equirectangular projection.
 Has an graphical user interface with options to select tessellation and colour to generate the image.
 
 
