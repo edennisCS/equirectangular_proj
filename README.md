@@ -32,7 +32,7 @@ Install the required libraries numpy, scipy, matplotlib and TKinter
 4. Once all sides have a colour, press 'Generate'
 5. Message should pop up when generation complete, now download the image result ready for use in an 360 viewer.
 
-[Demo Video](<link here>)
+[Demo Video](https://youtu.be/xTcL9EMgLiE)
 
 ## Contributors
 
